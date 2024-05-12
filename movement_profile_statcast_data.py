@@ -54,8 +54,8 @@ def plot_data_interactive(df):
     df = clean_data(df)
     pitcher_data = df[df['player_name'] == playerName]
     pitcher_data = pitcher_data.dropna(subset=['pfx_x', 'pfx_z', 'release_speed', 'release_spin_rate', 'spin_axis'])
-    condition = pitcher_data['description'] == 'hit_into_play'
-    pitcher_data.loc[condition, 'description'] += " || xwOBA: " + pitcher_data.loc[:,'estimated_woba_using_speedangle'].astype(str)
+    bip_condition = pitcher_data['description'] == 'hit_into_play'
+    pitcher_data.loc[bip_condition, 'description'] += " || xwOBA: " + pitcher_data.loc[bip_condition,'estimated_woba_using_speedangle'].astype(str)
 
     fig = px.scatter(pitcher_data, x='pfx_x', y='pfx_z', color='pitch_name',
                      hover_data=['release_speed', 'release_spin_rate', 'spin_axis', 'release_extension', 'description'],
