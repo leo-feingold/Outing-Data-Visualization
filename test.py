@@ -9,7 +9,7 @@ import plotly.express as px
 from matplotlib.patches import Rectangle
 
 playerName = 'Skenes, Paul'
-selected_pitch = 'Slider'
+selected_pitch = '4-Seam Fastball'
 hitter = 'R'
 
 def scrape_data():
@@ -37,16 +37,17 @@ def plot_heatmap(df, pitch_type, stand):
 
     hitter_tag = 'RHH' if stand == 'R' else 'LHH'
 
-    strike_zone = Rectangle((-0.71, 1.5), 1.42, 2.0, fill=False, color='red', linewidth=2)
+    fig, ax = plt.subplots(figsize=(6, 6))
+    sns.kdeplot(data=df, x='plate_x', y='plate_z', fill=True, thresh=0, levels=100, cmap="coolwarm")
+
+    strike_zone = Rectangle((-0.71, 1.5), 1.42, 2.0, fill=False, color='black', linewidth=2)
     ax.add_patch(strike_zone)
 
-    fig, ax = plt.subplots(figsize=(6, 6))
-    sns.kdeplot(data=df, x='plate_x', y='plate_z', fill=True, thresh=0, levels=100, cmap="viridis")
-    ax.set_title(f'Heatmap of {pitch_type} locations for {playerName} against {hitter_tag}')
+    ax.set_title(f"Heatmap of {pitch_type} locations for {playerName} against {hitter_tag} (Catcher's Perspective)")
     ax.set_xlabel('Horizontal Location (feet)')
     ax.set_ylabel('Vertical Location (feet)')
-    ax.set_xlim(-3, 3)
-    ax.set_ylim(0, 5)
+    ax.set_xlim(-2.1, 3.6)
+    ax.set_ylim(-0.23, 4.19)
     plt.show()
 
 
