@@ -25,11 +25,15 @@ def clean_data(df):
     return df
 
 def plot_data(df):
-    playerName = 'Schmidt, Clarke'
+    today = datetime.date.today()
+    today_str = today.strftime('%Y-%m-%d')
+
+    prev_day = today - datetime.timedelta(days=1)
+    prev_day = prev_day.strftime('%Y-%m-%d')
+
     df = clean_data(scrape_data())
     pitcher_data = df[df['player_name'] == playerName]
     pitcher_data = pitcher_data.dropna(subset=['pfx_x', 'pfx_z', 'release_speed', 'release_spin_rate', 'spin_axis', 'release_extension', 'pitch_type'])
-
 
     plt.figure(figsize=(10, 6))
     sns.scatterplot(x='pfx_x', y='pfx_z', data=pitcher_data, hue='pitch_type', style='pitch_type', s=100, palette='deep')
