@@ -6,18 +6,14 @@ from baseball_scraper import playerid_lookup # Might be worthwhile to use ID's i
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+from matplotlib.patches import Rectangle
 
-def scrape_data():
-    today = datetime.date.today()
-    today_str = today.strftime('%Y-%m-%d')
-    prev_day = today - datetime.timedelta(days=1)
-    prev_day = prev_day.strftime('%Y-%m-%d')
-    data = statcast(start_dt = prev_day, end_dt = today_str)
-    
-    print(data.columns)
-    print("\n")
-    #print(data.description)
-    # event data: 'description', 'events', 'bb_type', 'type'
-    return data
+playerName = 'Skenes, Paul'
+selected_pitch = 'Slider'
+hitter = 'R'
 
-scrape_data()
+
+
+
+
+plot_heatmap(clean_data(scrape_data()), selected_pitch, hitter)
