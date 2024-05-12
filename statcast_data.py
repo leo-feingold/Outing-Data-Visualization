@@ -1,19 +1,19 @@
 import pandas as pd
-import numpy as np 
+import numpy as np
 import datetime
-from baseball_scraper import statcast 
-import matplotlib.pyplot as plt 
-import seaborn as sns 
-import plotly.express as px 
-from bs4 import BeautifulSoup 
+from baseball_scraper import statcast
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
 
-today = datetime.date.today()
-today_str = today.strftime('%Y-%m-%d')
-
-prev_day = today - datetime.timedelta(days=1)
-prev_day = prev_day.strftime('%Y-%m-%d')
+playerName = 'Schmidt, Clarke'
 
 def scrape_data():
+    today = datetime.date.today()
+    today_str = today.strftime('%Y-%m-%d')
+
+    prev_day = today - datetime.timedelta(days=1)
+    prev_day = prev_day.strftime('%Y-%m-%d')
     data = statcast(start_dt = prev_day, end_dt = today_str)
     return data
 
@@ -41,7 +41,11 @@ def plot_data(df):
     plt.show()
 
 def plot_data_interactive(df):
-    playerName = 'Schmidt, Clarke'
+    today = datetime.date.today()
+    today_str = today.strftime('%Y-%m-%d')
+    prev_day = today - datetime.timedelta(days=1)
+    prev_day = prev_day.strftime('%Y-%m-%d')
+
     df = clean_data(df)  # Assuming df is already cleaned and passed here
     pitcher_data = df[df['player_name'] == playerName]
     pitcher_data = pitcher_data.dropna(subset=['pfx_x', 'pfx_z', 'release_speed', 'release_spin_rate', 'spin_axis'])
