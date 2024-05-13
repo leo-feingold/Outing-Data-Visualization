@@ -8,7 +8,8 @@ import seaborn as sns
 from matplotlib.patches import Rectangle
 
 playerName = 'Skenes, Paul'
-selected_pitch = '4-Seam Fastball'
+# For Skenes: ['Slider' 'Split-Finger' '4-Seam Fastball' 'Changeup' 'Curveball']
+selected_pitch = 'Split-Finger'
 hitter = 'R'
 
 def scrape_data():
@@ -22,14 +23,27 @@ def scrape_data():
 
 def clean_data(df):
     df = df[['pitcher', 'player_name', 'pitch_type', 'pitch_name', 'plate_x', 'plate_z', 'stand']]
-    df.dropna(inplace=True)
+    df = df.dropna()
     return df
 
 def filter_data(df, player_name, pitch_name, stand):
     return df[(df['player_name'] == player_name) & (df['pitch_name'] == pitch_name) & (df['stand'] == stand)]
 
+def print_arsenal(df):
+    df = df[df['player_name'] == playerName]
+    print(df.pitch_name.unique())
+
+
 
 def plot_heatmap(df, pitch_type, stand):
+    if df.empty:
+        print(f"No data available for {pitch_type} against {stand} hitters.")
+        return
+
+    if len(df) < 5:
+        print("Not enough data points to create a meaningful plot.")
+        return
+
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
     prev_day = today - datetime.timedelta(days=1)
@@ -42,7 +56,7 @@ def plot_heatmap(df, pitch_type, stand):
     hitter_tag = 'RHH' if stand == 'R' else 'LHH'
 
     fig, ax = plt.subplots(figsize=(6, 6))
-    sns.kdeplot(data=df, x='plate_x', y='plate_z', fill=True, thresh=0, levels=100, cmap="coolwarm")
+    sns.kdeplot(data=df, x='plate_x', y='plate_z', fill=True, thresh=0, levels=100, cmap="coolwarm") # bw_adjust=0.5
 
     strike_zone = Rectangle((-0.71, 1.5), 1.42, 2.0, fill=False, color='black', linewidth=2)
     ax.add_patch(strike_zone)
@@ -62,7 +76,9 @@ def plot_heatmap(df, pitch_type, stand):
 
 
 def main():
-    data = clean_data(scrape_data())
+    scraped = scrape_data()
+    #print_arsenal(scraped)
+    data = clean_data(scraped)
     filtered_data = filter_data(data, playerName, selected_pitch, hitter)
     plot_heatmap(filtered_data, selected_pitch, hitter)
 
