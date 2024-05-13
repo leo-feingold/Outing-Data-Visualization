@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 
-playerName = 'Schmidt, Clarke'
+playerName = 'Ragans, Cole'
 
 def scrape_data():
     today = datetime.date.today()
@@ -20,8 +20,9 @@ def scrape_data():
 
 def clean_data(df):
     df = scrape_data()
-    df = df[['pitcher', 'player_name', 'pitch_type', 'release_speed', 'pfx_x', 'pfx_z', 'release_spin_rate', 'spin_axis', 'release_extension', 'pitch_name', 'description', 'events', 'bb_type', 'type', 'estimated_woba_using_speedangle']]
-    df['pfx_x'] = df['pfx_x'] * -12
+    df = df[['pitcher', 'player_name', 'pitch_type', 'release_speed', 'pfx_x', 'pfx_z', 'release_spin_rate', 'spin_axis', 'release_extension', 'pitch_name', 'description', 'events', 'bb_type', 'type', 'estimated_woba_using_speedangle', 'p_throws']]
+    #df['pfx_x'] = df['pfx_x'] * -12
+    df['pfx_x'] = np.where(df['p_throws'] == 'R', df['pfx_x'] * -12, df['pfx_x'] * 12)
     df['pfx_z'] = df['pfx_z'] * 12
     return df
 
@@ -64,7 +65,7 @@ def plot_data_interactive(df):
                          'pfx_z': 'Vertical Movement (inches)',
                          'pitch_name': 'Pitch Type'
                      },
-                     title=f"Pitch Movement Profile for {playerName}, Date: {prev_day} (Pitcher's Perspective)")
+                     title=f"Pitch Movement Profile for {playerName} ({pitcher_data.p_throws.iloc[0]}HP), Date: {prev_day} (Arm Side+, Glove Side-)")
     fig.show()
 
 
