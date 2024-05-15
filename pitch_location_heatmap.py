@@ -1,3 +1,4 @@
+# Looks very similar to Thomas Nestico visuals on Twitter... so seems to work as intended
 import pandas as pd
 import numpy as np
 import datetime
@@ -7,10 +8,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.patches import Rectangle
 
-playerName = 'Skenes, Paul'
+playerName = 'Leiter, Jack'
 # For Skenes: ['Slider' 'Split-Finger' '4-Seam Fastball' 'Changeup' 'Curveball']
-selected_pitch = 'Split-Finger'
-hitter = 'R'
+# For Gil: ['Slider' 'Changeup' '4-Seam Fastball' 'Cutter']
+# For Rodon: ['4-Seam Fastball' 'Curveball' 'Slider' 'Changeup' 'Cutter']
+# For Leiter: ['4-Seam Fastball' 'Cutter' 'Changeup' 'Slider' 'Curveball']
+selected_pitch = 'Cutter'
+hitter = 'L'
 
 def scrape_data():
     today = datetime.date.today()
@@ -77,7 +81,7 @@ def plot_heatmap(df, pitch_type, stand):
 
 def main():
     scraped = scrape_data()
-    #print_arsenal(scraped)
+    print_arsenal(scraped)
     data = clean_data(scraped)
     filtered_data = filter_data(data, playerName, selected_pitch, hitter)
     plot_heatmap(filtered_data, selected_pitch, hitter)
