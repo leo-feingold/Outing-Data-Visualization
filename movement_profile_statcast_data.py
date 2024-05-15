@@ -8,15 +8,14 @@ import seaborn as sns
 import plotly.express as px
 
 
-# fix time delta, currently set for 2 days ago!
-playerName = 'Ragans, Cole'
-pitcherPerspectiveMode = False
+playerName = 'Leiter, Jack'
+pitcherPerspectiveMode = True
 
 def scrape_data():
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
 
-    prev_day = today - datetime.timedelta(days=2)
+    prev_day = today - datetime.timedelta(days=1)
     prev_day = prev_day.strftime('%Y-%m-%d')
     data = statcast(start_dt = prev_day, end_dt = today_str)
     return data
@@ -45,10 +44,8 @@ def plot_data(df):
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
 
-    prev_day = today - datetime.timedelta(days=2)
+    prev_day = today - datetime.timedelta(days=1)
     prev_day = prev_day.strftime('%Y-%m-%d')
-
-    df = clean_data(scrape_data())
     pitcher_data = df[df['player_name'] == playerName]
     pitcher_data = pitcher_data.dropna(subset=['pfx_x', 'pfx_z', 'release_speed', 'release_spin_rate', 'spin_axis', 'release_extension', 'pitch_type', 'description', 'estimated_woba_using_speedangle'])
 
@@ -69,10 +66,9 @@ def plot_data_interactive(df):
         myStr = "Arm Side +, Glove Side -"
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
-    prev_day = today - datetime.timedelta(days=2)
+    prev_day = today - datetime.timedelta(days=1)
     prev_day = prev_day.strftime('%Y-%m-%d')
 
-    df = clean_data(df)
     pitcher_data = df[df['player_name'] == playerName]
     pitcher_data = pitcher_data.dropna(subset=['pfx_x', 'pfx_z', 'release_speed', 'release_spin_rate', 'spin_axis'])
     bip_condition = pitcher_data['description'] == 'hit_into_play'
@@ -86,12 +82,16 @@ def plot_data_interactive(df):
                          'pitch_name': 'Pitch Type'
                      },
                      title=f"Pitch Movement Profile for {playerName} ({pitcher_data.p_throws.iloc[0]}HP), Date: {prev_day} ({myStr})")
+    fig.update_xaxes(range=[-25, 25])
+    fig.update_yaxes(range=[-25, 25])
+
     fig.show()
 
 
 
 def main():
     data = clean_data(scrape_data())
+    #plot_data(data)
     plot_data_interactive(data)
 
  
